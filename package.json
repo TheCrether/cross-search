@@ -8,6 +8,7 @@
     "@types/node": "12.12.7",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.4",
+    "electron-is-dev": "^1.1.0",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-scripts": "3.2.0",
@@ -18,9 +19,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "start:electron": "electron .",
+    "electron": "electron .",
     "preelectron-pack": "npm run build",
-    "electron-pack": "electron-builder -c.extraMetadata.main=build/main.js"
+    "electron-pack": "electron-builder -c.extraMetadata.main=build/main.js",
+    "dev:electron": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && electron .\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -50,16 +52,24 @@
   "bugs": {
     "url": "https://github.com/thecrether/cross-search/issues"
   },
-  "homepage": "https://github.com/thecrether/cross-search#readme",
+  "homepage": "./",
   "devDependencies": {
+    "concurrently": "^5.0.0",
     "electron": "^7.1.1",
-    "electron-builder": "^22.1.0"
+    "electron-builder": "^22.1.0",
+    "node-sass": "^4.13.0",
+    "wait-on": "^3.3.0"
   },
   "build": {
     "appId": "nonExistentID",
     "files": [
       "build/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      {
+        "from": "src",
+        "to": "build",
+        "filter": "**/*"
+      }
     ],
     "directories": {
       "buildResources": "assets"
