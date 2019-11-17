@@ -1,3 +1,4 @@
+// jshint ignore: start
 const { app, BrowserWindow } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
@@ -21,7 +22,8 @@ function createWindow() {
     title: "cross-search",
     transparent: true,
     titleBarStyle: "hidden",
-    fullscreenable: false
+    fullscreenable: false,
+    hasShadow: true
   });
 
   mainWindow.setAlwaysOnTop(true, "modal-panel");
@@ -29,13 +31,15 @@ function createWindow() {
   // and load the index.html of the app.
   if (isDev) {
     mainWindow.loadURL("http://localhost:3000");
+    mainWindow.webContents.openDevTools();
   } else {
     mainWindow.loadURL(`file://${path.join(__dirname, "../build/index.html")}`);
   }
-  mainWindow.webContents.openDevTools();
   mainWindow.on("closed", () => (mainWindow = null));
+  mainWindow.focus();
 }
-app.on("ready", createWindow);
+
+app.on("ready", () => setTimeout(createWindow, 300));
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {

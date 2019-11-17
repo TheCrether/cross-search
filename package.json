@@ -6,9 +6,9 @@
   "dependencies": {
     "@types/jest": "24.0.23",
     "@types/node": "12.12.7",
-    "@types/react": "16.9.11",
     "@types/react-dom": "16.9.4",
     "electron-is-dev": "^1.1.0",
+    "jshint": "^2.10.3",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-scripts": "3.2.0",
@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "electron . --enable-transparent-visuals --disable-gpu",
+    "electron": "electron --enable-transparent-visuals --disable-gpu .",
     "preelectron-pack": "npm run build",
     "electron-pack": "electron-builder -c.extraMetadata.main=build/main.js",
     "dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && npm run electron\"",
@@ -55,10 +55,17 @@
   },
   "homepage": "./",
   "devDependencies": {
+    "@types/react": "^16.9.11",
+    "@typescript-eslint/eslint-plugin": "^2.7.0",
+    "@typescript-eslint/parser": "^2.7.0",
     "concurrently": "^5.0.0",
     "electron": "^7.1.1",
     "electron-builder": "^22.1.0",
+    "eslint-config-prettier": "^6.6.0",
+    "eslint-config-react": "^1.1.7",
+    "eslint-plugin-prettier": "^3.1.1",
     "node-sass": "^4.13.0",
+    "prettier": "^1.19.1",
     "wait-on": "^3.3.0"
   },
   "build": {
