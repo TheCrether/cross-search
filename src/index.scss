@@ -1,3 +1,8 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 html {
   width: 100%;
   background: transparent;
@@ -16,6 +21,19 @@ body {
   // background: white;
   // border-radius: 5px;
   background: transparent;
+  -webkit-app-region: drag;
+  overflow: hidden;
+}
+
+input {
+  cursor: text;
+}
+
+input,
+button {
+  -webkit-app-region: no-drag;
+  border: none;
+  outline: none;
 }
 
 code {

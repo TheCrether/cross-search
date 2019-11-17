@@ -1,6 +1,13 @@
 .app {
-  border-radius: 15px;
-  background: blue;
+  border-radius: 10px;
+  background: #dadada;
   height: 100%;
   width: 100%;
+  overflow: hidden;
+}
+
+.input {
+  input {
+    width: 100%;
+  }
 }

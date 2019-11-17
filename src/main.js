@@ -7,7 +7,7 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 600,
-    height: conf.INPUT_HEIGHT,
+    height: conf.INPUT_HEIGHT + 20,
     autoHideMenuBar: true,
     backgroundColor: "#00000000",
     alwaysOnTop: true,
@@ -19,7 +19,9 @@ function createWindow() {
       nodeIntegration: true
     },
     title: "cross-search",
-    transparent: true
+    transparent: true,
+    titleBarStyle: "hidden",
+    fullscreenable: false
   });
 
   mainWindow.setAlwaysOnTop(true, "modal-panel");
