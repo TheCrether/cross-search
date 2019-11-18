@@ -1,4 +1,5 @@
 module.exports = {
-  INPUT_HEIGHT: 60,
-  RESULTS_HEIGHT: 45
+  INPUT_HEIGHT: 70,
+  RESULTS_HEIGHT: 45,
+  HOTKEY: "Alt+Shift+Space"
 };

@@ -1,8 +1,9 @@
 // jshint ignore: start
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, globalShortcut } = require("electron");
 const isDev = require("electron-is-dev");
 const path = require("path");
 const conf = require("./lib/config");
+const toggleWindow = require("./lib/window/toggleWindow");
 let mainWindow;
 function createWindow() {
   // Create the browser window.
@@ -37,6 +38,8 @@ function createWindow() {
   }
   mainWindow.on("closed", () => (mainWindow = null));
   mainWindow.focus();
+
+  globalShortcut.register(conf.HOTKEY, () => toggleWindow(mainWindow));
 }
 
 app.on("ready", () => setTimeout(createWindow, 300));
