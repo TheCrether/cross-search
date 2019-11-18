@@ -1,30 +1,60 @@
 @import "../../assets/variables.scss";
 
 .app {
-  border-radius: 10px;
+  border-radius: $radius;
   background: $bg;
   height: 100%;
   width: 100%;
   overflow: hidden;
 }
 
-.header {
-  height: 20px;
+#header {
   width: 100%;
   -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-  padding: 2px;
+  box-sizing: border-box;
+  color: $bg;
+  display: flex;
+  -webkit-app-region: drag;
+  background: $lightBg;
+
+  .title {
+    color: black;
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  button {
+    font-size: 20px;
+    width: 1em;
+    height: 1em;
+    cursor: pointer;
+
+    .MuiSvgIcon-root {
+      width: 1em;
+      height: 1em;
+      font-size: 1em;
+    }
+  }
+
+  #close {
+    background: #f22222;
+  }
+
+  #hide {
+    background: yellow;
+  }
 }
 
 .input {
+  background: inherit;
   input {
+    background: inherit;
     width: 100%;
     font-size: 30px;
     line-height: 50px;
     padding: 10px;
     -webkit-box-sizing: border-box;
-            box-sizing: border-box;
-    background: $lightBg;
+    box-sizing: border-box;
     color: $text;
   }
 }

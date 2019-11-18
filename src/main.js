@@ -9,7 +9,7 @@ function createWindow() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 600,
-    height: conf.INPUT_HEIGHT + 20,
+    height: conf.BASE_HEIGHT,
     autoHideMenuBar: true,
     backgroundColor: "#00000000",
     alwaysOnTop: true,
@@ -39,7 +39,7 @@ function createWindow() {
   mainWindow.on("closed", () => (mainWindow = null));
   mainWindow.focus();
 
-  globalShortcut.register(conf.HOTKEY, () => toggleWindow(mainWindow));
+  globalShortcut.registerAll(conf.HOTKEYS, () => toggleWindow(mainWindow));
 }
 
 app.on("ready", () => setTimeout(createWindow, 300));
