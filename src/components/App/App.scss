@@ -28,20 +28,28 @@
     width: 1em;
     height: 1em;
     cursor: pointer;
+    transition: all 200ms;
 
-    .MuiSvgIcon-root {
+    &:hover {
+      i {
+        color: $text;
+      }
+    }
+
+    i {
       width: 1em;
       height: 1em;
       font-size: 1em;
+      transition: all 200ms;
     }
   }
 
   #close {
     background: #f22222;
-  }
 
-  #hide {
-    background: yellow;
+    &:hover {
+      background: rgba(#f22222, 0.7);
+    }
   }
 }
 
