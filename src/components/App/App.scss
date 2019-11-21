@@ -27,14 +27,7 @@
     font-size: 20px;
     width: 1em;
     height: 1em;
-    cursor: pointer;
     transition: all 200ms;
-
-    &:hover {
-      i {
-        color: $text;
-      }
-    }
 
     i {
       width: 1em;
@@ -48,7 +41,12 @@
     background: #f22222;
 
     &:hover {
-      background: rgba(#f22222, 0.7);
+      background: rgba(#f22222, 0.8);
+      cursor: pointer;
+
+      i {
+        color: $text;
+      }
     }
   }
 }

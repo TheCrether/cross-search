@@ -2,13 +2,13 @@
   "name": "cross-search",
   "version": "0.1.0",
   "description": "An cross-platform tool for searching desktop apps etc.",
-  "main": "src/main.js",
+  "main": "build/main.js",
   "dependencies": {
     "@types/jest": "24.0.23",
     "@types/node": "12.12.7",
     "@types/react-dom": "16.9.4",
+    "electron-devtools-installer": "^2.2.4",
     "electron-is-dev": "^1.1.0",
-    "jshint": "^2.10.3",
     "react": "^16.11.0",
     "react-dom": "^16.11.0",
     "react-scripts": "3.2.0",
@@ -17,9 +17,10 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "build:electron": "tsc --build tsconfig.electron.json",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "electron --enable-transparent-visuals --disable-gpu .",
+    "electron": "npm run build:electron && electron --enable-transparent-visuals --disable-gpu .",
     "preelectron-pack": "npm run build",
     "electron-pack": "electron-builder -c.extraMetadata.main=build/main.js",
     "dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && npm run electron\"",
@@ -72,12 +73,7 @@
     "appId": "nonExistentID",
     "files": [
       "build/**/*",
-      "node_modules/**/*",
-      {
-        "from": "src",
-        "to": "build",
-        "filter": "**/*"
-      }
+      "node_modules/**/*"
     ],
     "directories": {
       "buildResources": "assets"
