@@ -16,35 +16,41 @@
   display: flex;
   -webkit-app-region: drag;
   background: $lightBg;
-
+  align-items: center;
   .title {
     color: black;
     flex-grow: 1;
     text-align: center;
+    height: 100%;
   }
 
   button {
-    font-size: 20px;
-    width: 1em;
-    height: 1em;
-    transition: all 200ms;
+    height: 20px;
+    width: 20px;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 
     i {
+      font-size: 14px;
+      transition: all 200ms;
+      border-radius: 0.5em;
       width: 1em;
       height: 1em;
       font-size: 1em;
       transition: all 200ms;
+      background: #f22222;
     }
   }
 
   #close {
-    background: #f22222;
-
     &:hover {
-      background: rgba(#f22222, 0.8);
       cursor: pointer;
 
       i {
+        background: rgba(#f22222, 0.8);
         color: $text;
       }
     }
