@@ -30,7 +30,6 @@ function createWindow() {
 
   mainWindow.setAlwaysOnTop(true, "modal-panel");
 
-  // and load the index.html of the app.
   if (isDev) {
     mainWindow.loadURL("http://localhost:3000");
     mainWindow.webContents.openDevTools();
@@ -48,6 +47,8 @@ function createWindow() {
 
   globalShortcut.registerAll(HOTKEYS, () => toggleWindow(mainWindow));
 }
+
+app.on("quit", () => app.quit())
 
 app.on("ready", () => setTimeout(createWindow, 300));
 
