@@ -1,25 +1,23 @@
-import { Result, Platform } from "../interfaces";
-const { DIRS, EXTS } = getPlatform();
+import { Result } from "../interfaces";
 
 export function search(): Promise<Result[]> {
   return new Promise(() => {
-    
-    return [{ id: 1, name: "lel", icon: "" }];
+    getResults().then(results => {
+      return results;
+    })
   });
 }
 
-function getPlatform(): Partial<Platform> {
-  let platform;
-
+function getResults(): Promise<Result[]> {
   if (process.platform === "win32") {
-    platform = require("./windows");
+    return require("./windows");
   } else if (process.platform === "darwin") {
-    platform = require("./mac");
+    return require("./mac");
   } else if (process.platform === "linux") {
-    platform = require("./linux");
+    return require("./linux");
+  } else {
+    return null;
   }
-
-  return platform;
 }
 
 export default search;

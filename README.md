@@ -3,28 +3,29 @@
 An cross-platform tool for searching desktop apps etc.
 
 - [cross-search](#cross-search)
-	- [About](#about)
-	- [Available Scripts](#available-scripts)
-		- [`npm run start`](#npm run-start)
-		- [`npm run test`](#npm run-test)
-		- [`npm run build`](#npm run-build)
-		- [`npm run eject`](#npm run-eject)
+  - [About](#about)
+  - [Available Scripts](#available-scripts)
+    - [`npm run dev`](#npm-run-dev)
+    - [`npm run dev:win`](#npm-run-devwin)
+    - [`npm run test`](#npm-run-test)
+    - [`npm run build`](#npm-run-build)
+    - [`npm run eject`](#npm-run-eject)
 
 ## About
 
-I wanted to have something like [cerebro](https://github.com/KELiON/cerebro/) and spotlight for Linux and Windows. So i got inspirations from these two applications. This project is made with Electron
+I wanted to have something like [cerebro](https://github.com/KELiON/cerebro/) and spotlight for Linux and Windows.<br>
+Inspirations are from these two applications and also some code parts may be reused from cerebro for easiness.<br>
+This project is made with Electron
 
-## Available Scripts (default from create-react-app)
+## Available Scripts
 
-In the project directory, you can run:
+### `npm run dev`
 
-### `npm run start`
+Launches the react app (`npm run start`) without a browser and then the electron app
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### `npm run dev:win`
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+Does the same as above but for windows because you cant set environment variables like on Linux;
 
 ### `npm run test`
 
