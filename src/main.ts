@@ -19,7 +19,8 @@ function createWindow() {
     center: true,
     resizable: false,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      preload: join(app.getAppPath(), "src", 'preload.js')
     },
     title: "cross-search",
     transparent: true,
