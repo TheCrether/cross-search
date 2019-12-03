@@ -1,7 +1,6 @@
 import { Result } from "../interfaces";
 import fs, { exists, readdirSync } from "fs";
 import os, { platform, networkInterfaces } from "os";
-import { windows, osx, linux } from "electron-is";
 
 
 export function search(): Promise<Result[]> {
