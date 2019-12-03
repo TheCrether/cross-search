@@ -2,15 +2,15 @@ import { Result } from "../interfaces";
 
 export function search(): Promise<Result[]> {
   return new Promise(() => {
-    getResults().then(results => {
-      return results;
-    })
+    let { DIRS, EXTS, getResult } = getPlatform();
+    const directories: string[] = DIRS;
+    const extensions: string[] = EXTS;
   });
 }
 
-function getResults(): Promise<Result[]> {
+function getPlatform(): any {
   if (process.platform === "win32") {
-    return require("./windows");
+    return require("./win");
   } else if (process.platform === "darwin") {
     return require("./mac");
   } else if (process.platform === "linux") {
