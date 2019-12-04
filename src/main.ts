@@ -34,7 +34,6 @@ function createWindow() {
   if (isDev) {
     mainWindow.loadURL("http://localhost:3000");
     mainWindow.webContents.openDevTools();
-    // TODO REMOVE WHEN EXTENSIONSFOLDER CAN BE FOUND LINUX
     import("electron-devtools-installer").then(installer => {
       installer(installer.REACT_DEVELOPER_TOOLS)
         .then((name) => console.log(`Added Extension:  ${name}`))
