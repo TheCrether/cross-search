@@ -1,5 +1,5 @@
 import { Result } from './../interfaces';
-import { readFileSync } from 'fs';
+const { readFileSync } = window.require('fs');
 export const DIRS = ["~/.local/share/applications/", "/usr/share/applications/", "/usr/local/share/applications/"];
 
 export const EXTS = [".desktop"];
@@ -7,14 +7,24 @@ export const EXTS = [".desktop"];
 export function parseDesktopFile(path: string): Result {
   const file = readFileSync(path).toString();
 
-  const keys = ["Name"];
+  const keys = ["Name", "Exec"];
 
-  let app: Result;
+  let app: Result = {
+    icon: "",
+    name: "",
+    exec: ""
+  };
   keys.forEach(key => {
-    const regex = new RegExp("^RegExr=(.+)", "m");
+    const regex = new RegExp(`^${key}=(.+)`, "m");
     const match = file.match(regex);
-    console.log(match);
+    if (match) {
+      app[key.toLowerCase()] = match[1];
+    }
   })
+
+  if (!app.name) {
+    return null;
+  }
 
   return app;
 }

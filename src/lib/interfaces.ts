@@ -1,7 +1,7 @@
 export interface Result {
   name: string;
   icon: string;
-  path: string;
+  exec: string;
 }
 
 export interface Platform {

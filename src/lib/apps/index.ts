@@ -1,28 +1,27 @@
 import { Result } from "../interfaces";
-import fs, { exists, readdirSync } from "fs";
-
+const { exists, readdirSync } = window.require("fs");
+const { join } = window.require("path");
+const { DIRS, EXTS, getResult } =
+  getPlatform();
+const directories: string[] = DIRS;
+const extensions: string[] = EXTS;
 
 export function search(): Promise<Result[]> {
-  return new Promise(() => {
-    let { DIRS, EXTS, getResult } =
-      getPlatform();
-    const directories: string[] = DIRS;
-    const extensions: string[] = EXTS;
+  return new Promise((resolve, reject) => {
 
     directories.forEach(dir => {
-      fs.exists(dir, (ex => {
+      exists(dir, (ex => {
         if (!ex) {
           return;
         }
-        const files = readdirSync(dir);
-        // TODO change
-        files.filter(file => file.includes(extensions[0]))
-          .forEach(file => {
-            console.log(getResult(file))
-          })
+        const files: string[] = readdirSync(dir);
+        const entries: Result[] = [];
+        getDesktopEntries(files, entries, dir);
+        return resolve(entries);
       }))
+
     })
-    return [{ icon: "", name: "none", path: "" }] as Result[];
+    return [] as Result[];
   });
 }
 
@@ -39,3 +38,29 @@ function getPlatform(): any {
 }
 
 export default search;
+
+function getDesktopEntries(files: string[], entries: Result[], baseDir: string): void {
+  const realFiles: string[] = [];
+  const dirs: string[] = [];
+  files.forEach(file => {
+    let yes = true;
+    for (let ext of extensions) {
+      if (file.endsWith(ext)) {
+        realFiles.push(file);
+        break;
+      }
+    }
+    if (!yes) {
+      dirs.push(file);
+    }
+  })
+  realFiles.forEach(file => {
+    const result = getResult(join(baseDir, file))
+    if (result) entries.push(result)
+  });
+  dirs.forEach(dir => {
+    const results: Result[] = [];
+    getDesktopEntries(readdirSync(dir), results, join(baseDir, dir));
+    entries = entries.concat(results);
+  })
+}

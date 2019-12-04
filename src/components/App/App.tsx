@@ -11,17 +11,15 @@ const { remote } = window.require("electron");
 export class App extends Component<{}, {}> {
   state = {
     resultList: []
-  }
+  };
 
   componentDidMount() {
     apps().then(results => {
-      console.log(results);
-      this.setState({ resultList: [this.state.resultList, ...results] })
-    })
+      this.setState({ resultList: [this.state.resultList, ...results] });
+    });
   }
 
   render() {
-    console.log(this.state.resultList)
     return (
       <div className="app">
         <div id="header" style={{ height: HEADER_HEIGHT }}>

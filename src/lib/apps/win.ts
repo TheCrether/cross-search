@@ -20,6 +20,6 @@ export function getResult(path: string): Result {
   return {
     icon: details.icon || "",
     name: "test",
-    path: details.target
+    exec: details.target
   } as Result;
 }
