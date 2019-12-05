@@ -29,6 +29,8 @@ function createWindow() {
     hasShadow: true
   });
 
+  mainWindow.setBounds({ y: 100 })
+
   mainWindow.setAlwaysOnTop(true, "modal-panel");
 
   if (isDev) {

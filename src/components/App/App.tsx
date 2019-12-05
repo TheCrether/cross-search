@@ -4,9 +4,7 @@ import { BASE_HEIGHT, HEADER_HEIGHT } from "../../lib/config";
 import toggleWindow from "../../lib/window/toggleWindow";
 import { Results } from "../Results/Results";
 import apps from "../../lib/apps";
-import { app } from "electron";
-
-const { remote } = window.require("electron");
+import { app, remote } from "electron";
 
 export class App extends Component<{}, {}> {
   state = {
@@ -24,12 +22,12 @@ export class App extends Component<{}, {}> {
       <div className="app">
         <div id="header" style={{ height: HEADER_HEIGHT }}>
           <div className="title">cross-search</div>
-          <button
+          {/* <button
             id="close"
             onClick={() => toggleWindow(remote.getCurrentWindow())}
           >
             <i className="material-icons">clear</i>
-          </button>
+          </button> */}
         </div>
         <div className="input">
           <input

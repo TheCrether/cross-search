@@ -61,6 +61,6 @@ function getDesktopEntries(files: string[], entries: Result[], baseDir: string):
   dirs.forEach(dir => {
     const results: Result[] = [];
     getDesktopEntries(readdirSync(dir), results, join(baseDir, dir));
-    entries = entries.concat(results);
+    entries = [...entries, ...results];
   })
 }

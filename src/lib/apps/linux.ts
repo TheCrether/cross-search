@@ -33,3 +33,7 @@ export function getResult(path: string): Result {
   return parseDesktopFile(path);
 }
 
+export function getIcon(result: Result): void {
+  
+}
+
