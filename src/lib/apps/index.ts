@@ -9,7 +9,7 @@ export function search(): Promise<Result[]> {
   return new Promise((resolve, reject) => {
 
     directories.forEach(dir => {
-      exists(dir, (ex => {
+      exists(dir, ex => {
         if (!ex) {
           return;
         }
@@ -17,8 +17,7 @@ export function search(): Promise<Result[]> {
         const entries: Result[] = [];
         getDesktopEntries(files, entries, dir);
         return resolve(entries);
-      }))
-
+      });
     })
     return [] as Result[];
   });
@@ -46,13 +45,14 @@ function getDesktopEntries(files: string[], entries: Result[], baseDir: string):
     for (let ext of extensions) {
       if (file.endsWith(ext)) {
         realFiles.push(file);
+        yes = false;
         break;
       }
     }
-    if (!yes) {
+    if (yes) {
       dirs.push(file);
     }
-  })
+  });
   realFiles.forEach(file => {
     const result = getResult(join(baseDir, file))
     if (result) entries.push(result)

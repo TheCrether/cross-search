@@ -6,20 +6,32 @@
     "prettier/@typescript-eslint",
     "plugin:prettier/recommended"
   ],
-  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "plugins": [
+    "react",
+    "@typescript-eslint",
+    "prettier"
+  ],
   "env": {
-    "browser": true,
+    "browser": false,
     "jasmine": true,
     "jest": true
   },
   "rules": {
-    "prettier/prettier": ["error", { "singleQuote": false }]
+    "prettier/prettier": [
+      "error",
+      {
+        "singleQuote": false
+      }
+    ],
+    "no-use-before-define": "off",
+    // "no-undef": "off",
+    "no-explicit-any": "off"
   },
   "settings": {
     "react": {
       "pragma": "React",
       "version": "detect"
-    }
+    },
   },
   "parser": "@typescript-eslint/parser"
 }
