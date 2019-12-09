@@ -1,8 +1,7 @@
 import { Result } from "../interfaces";
 const { exists, readdirSync } = window.require("fs");
 const { join } = window.require("path");
-const { DIRS, EXTS, getResult } =
-  getPlatform();
+const { DIRS, EXTS, getResult } = getPlatform();
 const directories: string[] = DIRS;
 const extensions: string[] = EXTS;
 
