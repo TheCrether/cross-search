@@ -13,7 +13,6 @@ export function search(): Promise<Result[]> {
     directories.forEach(dir => {
       dir = dir.replace("~", homedir())
       if (!existsSync(dir)) return;
-      console.log("yes");
       const files: string[] = readdirSync(dir);
       const entries: Result[] = [];
       getDesktopEntries(files, entries, dir);
@@ -42,10 +41,6 @@ function getDesktopEntries(files: string[], entries: Result[], baseDir: string):
   const dirs: string[] = [];
   files.forEach(file => {
     if (existsSync(join(baseDir, file))) {
-      // console.group("statSync");
-      // console.log(baseDir + file);
-      // console.log(statSync(join(baseDir, file)));
-      // console.groupEnd();
       if (statSync(join(baseDir, file)).isDirectory()) {
         dirs.push(file);
       } else {
