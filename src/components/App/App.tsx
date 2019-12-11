@@ -13,6 +13,7 @@ export class App extends Component<{}, {}> {
 
   componentDidMount() {
     apps().then(results => {
+      console.log(results);
       this.setState({ resultList: [this.state.resultList, ...results] });
     });
   }

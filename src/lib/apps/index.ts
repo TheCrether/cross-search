@@ -1,25 +1,25 @@
 import { Result } from "../interfaces";
-const { exists, readdirSync } = window.require("fs");
+const { existsSync, readdirSync, statSync } = window.require("fs");
 const { join } = window.require("path");
+const { homedir } = window.require("os");
 const { DIRS, EXTS, getResult } = getPlatform();
 const directories: string[] = DIRS;
 const extensions: string[] = EXTS;
 
 export function search(): Promise<Result[]> {
   return new Promise((resolve, reject) => {
+    let result: Result[] = [];
 
     directories.forEach(dir => {
-      exists(dir, ex => {
-        if (!ex) {
-          return;
-        }
-        const files: string[] = readdirSync(dir);
-        const entries: Result[] = [];
-        getDesktopEntries(files, entries, dir);
-        return resolve(entries);
-      });
+      dir = dir.replace("~", homedir())
+      if (!existsSync(dir)) return;
+      console.log("yes");
+      const files: string[] = readdirSync(dir);
+      const entries: Result[] = [];
+      getDesktopEntries(files, entries, dir);
+      result = [...result, ...entries];
     })
-    return [] as Result[];
+    resolve(result);
   });
 }
 
@@ -41,16 +41,21 @@ function getDesktopEntries(files: string[], entries: Result[], baseDir: string):
   const realFiles: string[] = [];
   const dirs: string[] = [];
   files.forEach(file => {
-    let yes = true;
-    for (let ext of extensions) {
-      if (file.endsWith(ext)) {
-        realFiles.push(file);
-        yes = false;
-        break;
+    if (existsSync(join(baseDir, file))) {
+      // console.group("statSync");
+      // console.log(baseDir + file);
+      // console.log(statSync(join(baseDir, file)));
+      // console.groupEnd();
+      if (statSync(join(baseDir, file)).isDirectory()) {
+        dirs.push(file);
+      } else {
+        for (let ext of extensions) {
+          if (file.endsWith(ext)) {
+            realFiles.push(file);
+            break;
+          }
+        }
       }
-    }
-    if (yes) {
-      dirs.push(file);
     }
   });
   realFiles.forEach(file => {
