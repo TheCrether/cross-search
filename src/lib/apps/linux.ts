@@ -34,7 +34,7 @@ export function getResult(path: string): Result {
 }
 
 export function getIcon(result: Result): Result {
-  
+
   return null;
 }
 
