@@ -1,4 +1,4 @@
-import { Result } from './../interfaces';
+import { Result } from '../interfaces';
 const { readFileSync } = window.require('fs');
 export const DIRS = ["~/.local/share/applications/", "/usr/share/applications/", "/usr/local/share/applications/"];
 
@@ -9,7 +9,7 @@ export function parseDesktopFile(path: string): Result {
 
   const keys = ["Name", "Exec"];
 
-  let app: Result = {
+  const app: Result = {
     icon: "",
     name: "",
     exec: ""
@@ -20,7 +20,7 @@ export function parseDesktopFile(path: string): Result {
     if (match) {
       app[key.toLowerCase()] = match[1];
     }
-  })
+  });
 
   if (!app.name) {
     return null;
@@ -34,7 +34,5 @@ export function getResult(path: string): Result {
 }
 
 export function getIcon(result: Result): Result {
-
   return null;
 }
-
