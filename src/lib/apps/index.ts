@@ -1,22 +1,26 @@
 import { Result } from "../interfaces";
-const { existsSync, readdirSync, statSync } = window.require("fs");
-const { join } = window.require("path");
-const { homedir } = window.require("os");
+import { existsSync, readdirSync, statSync, accessSync } from "fs" // window.require("fs");
+import { join } from "path"; // window.require("path");
+import { homedir } from "os"; // window.require("os");
 const { DIRS, EXTS, getResult } = getPlatform();
 const directories: string[] = DIRS;
 const extensions: string[] = EXTS;
 
 export function search(): Promise<Result[]> {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let result: Result[] = [];
 
     directories.forEach(dir => {
       dir = dir.replace("~", homedir())
-      if (!existsSync(dir)) return;
-      const files: string[] = readdirSync(dir);
-      const entries: Result[] = [];
-      getDesktopEntries(files, entries, dir);
-      result = [...result, ...entries];
+      try {
+        accessSync(dir);
+        const files: string[] = readdirSync(dir);
+        const entries: Result[] = [];
+        getDesktopEntries(files, entries, dir);
+        result = [...result, ...entries];
+      } catch (error) {
+        console.error(error);
+      }
     })
     resolve(result);
   });
@@ -44,7 +48,7 @@ function getDesktopEntries(files: string[], entries: Result[], baseDir: string):
       if (statSync(join(baseDir, file)).isDirectory()) {
         dirs.push(file);
       } else {
-        for (let ext of extensions) {
+        for (const ext of extensions) {
           if (file.endsWith(ext)) {
             realFiles.push(file);
             break;
@@ -54,12 +58,20 @@ function getDesktopEntries(files: string[], entries: Result[], baseDir: string):
     }
   });
   realFiles.forEach(file => {
-    const result = getResult(join(baseDir, file))
-    if (result) entries.push(result)
+    try {
+      const result = getResult(join(baseDir, file))
+      if (result) entries.push(result)
+    } catch (e) {
+      console.error(join(baseDir, file));
+    }
   });
   dirs.forEach(dir => {
-    const results: Result[] = [];
-    getDesktopEntries(readdirSync(dir), results, join(baseDir, dir));
-    entries = [...entries, ...results];
+    try {
+      const results: Result[] = [];
+      getDesktopEntries(readdirSync(join(baseDir, dir)), results, join(baseDir, dir));
+      entries = [...entries, ...results];
+    } catch (error) {
+      console.error(error);
+    }
   })
 }

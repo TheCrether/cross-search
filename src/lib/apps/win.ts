@@ -1,13 +1,27 @@
 import { Result } from './../interfaces';
 import { join, sep } from "path";
 import { shell } from "electron";
+import { homedir } from "os";
+import { lstatSync } from 'fs';
 
-const { APPDATA, ProgramData, USERPROFILE } = process.env;
+const { APPDATA, ProgramData } = window.process.env;
+let DESKTOP = join(homedir(), "Desktop");
+
+try {
+  lstatSync(join(homedir(), "Desktop"));
+} catch (e) {
+  try {
+    DESKTOP = shell.readShortcutLink(join(homedir(), "Desktop.lnk")).target;
+  } catch (e) {
+    DESKTOP = join(homedir(), "Desktop");
+  }
+}
+
 
 export const DIRS = [
-  USERPROFILE && join(USERPROFILE, "Desktop"),
-  APPDATA && join(APPDATA, "Microsoft", "Windows", "Start Menu", "Programs"),
-  ProgramData && join(ProgramData, "Microsoft", "Windows", "Start Menu", "Programs")
+  DESKTOP,
+  join(APPDATA, "Microsoft", "Windows", "Start Menu", "Programs"),
+  join(ProgramData, "Microsoft", "Windows", "Start Menu", "Programs")
 ];
 
 export const EXTS = [
