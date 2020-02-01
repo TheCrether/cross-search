@@ -36,11 +36,6 @@ function createWindow() {
   if (isDev) {
     mainWindow.loadURL("http://localhost:3000");
     mainWindow.webContents.openDevTools();
-    import("electron-devtools-installer").then(installer => {
-      installer(installer.REACT_DEVELOPER_TOOLS)
-        .then((name) => console.log(`Added Extension:  ${name}`))
-        .catch((err) => console.log('An error occurred: ', err));
-    })
   } else {
     mainWindow.loadURL(`file://${join(__dirname, "../build/index.html")}`);
   }

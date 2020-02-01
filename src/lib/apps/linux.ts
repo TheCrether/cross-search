@@ -1,5 +1,5 @@
 import { Result } from '../interfaces';
-const { readFileSync } = window.require('fs');
+import { readFileSync } from "fs";
 export const DIRS = ["~/.local/share/applications/", "/usr/share/applications/", "/usr/local/share/applications/"];
 
 export const EXTS = [".desktop"];
@@ -7,13 +7,24 @@ export const EXTS = [".desktop"];
 export function parseDesktopFile(path: string): Result {
   const file = readFileSync(path).toString();
 
-  const keys = ["Name", "Exec"];
+  const keys = ["Name", "Exec", "Icon"];
+
+  const disqualifying = ["NoDisplay", "Hidden"];
+
+  let notAdd = false;
 
   const app: Result = {
     icon: "",
     name: "",
     exec: ""
   };
+  disqualifying.forEach(dis => {
+    const regex = new RegExp(`^${dis}=(.+)`, "m");
+    const match = file.match(regex);
+    if (match) {
+      notAdd = true;
+    }
+  });
   keys.forEach(key => {
     const regex = new RegExp(`^${key}=(.+)`, "m");
     const match = file.match(regex);
@@ -22,7 +33,7 @@ export function parseDesktopFile(path: string): Result {
     }
   });
 
-  if (!app.name) {
+  if (!app.name || notAdd) {
     return null;
   }
 
@@ -31,8 +42,4 @@ export function parseDesktopFile(path: string): Result {
 
 export function getResult(path: string): Result {
   return parseDesktopFile(path);
-}
-
-export function getIcon(result: Result): Result {
-  return null;
 }

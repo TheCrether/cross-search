@@ -1,7 +1,8 @@
 import { Result } from "../interfaces";
-import { existsSync, readdirSync, statSync, accessSync } from "fs" // window.require("fs");
-import { join } from "path"; // window.require("path");
-import { homedir } from "os"; // window.require("os");
+import { existsSync, readdirSync, statSync, accessSync } from "fs"
+import { join } from "path";
+import { homedir } from "os";
+
 const { DIRS, EXTS, getResult } = getPlatform();
 const directories: string[] = DIRS;
 const extensions: string[] = EXTS;
@@ -19,7 +20,7 @@ export function search(): Promise<Result[]> {
         getDesktopEntries(files, entries, dir);
         result = [...result, ...entries];
       } catch (error) {
-        console.error(error);
+        console.error((error as Error).message);
       }
     })
     resolve(result);
