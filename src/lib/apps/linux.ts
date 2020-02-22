@@ -1,7 +1,9 @@
+import { app } from 'electron';
 import { homedir } from 'os';
 import { Result } from '../interfaces';
 import { readFileSync, existsSync } from "fs";
 import { join } from 'path';
+import { spawnSync } from 'child_process';
 
 const { XDG_DATA_DIRS } = window.process.env;
 const additionalDirs = [`${homedir()}/.local/share`]
@@ -43,14 +45,23 @@ export function parseDesktopFile(path: string): Result {
     return null;
   }
 
-
+  getIcon(app.icon)
 
   return app;
 }
 
-function getIcon(icon: string) {
-  if (icon.includes("")) {
-    console.log("ree");
+function getIcon(icon: string): string {
+  const regex = new RegExp(".*.(svg|png|xpm|gif|ico)$");
+  if (regex.exec(icon)) {
+    return icon;
+  } else {
+    try {
+      // const python = spawnSync("python", [join(app.getAppPath(), "util", "get-icon.py"), `"${icon}"`]);
+      // console.log(python.output.toString());
+      // eslint-disable-next-line no-empty
+    } catch (e) {
+      console.log("error")
+    }
   }
 }
 

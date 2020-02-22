@@ -1,6 +1,6 @@
 {
   "name": "cross-search",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An cross-platform tool for searching desktop apps etc.",
   "main": "build/main.js",
   "dependencies": {
@@ -23,6 +23,7 @@
     "dotenv": "^6.2.0",
     "dotenv-expand": "5.1.0",
     "electron-is-dev": "^1.1.0",
+    "electron-react-devtools": "^0.5.3",
     "eslint": "^6.1.0",
     "eslint-config-react-app": "^5.0.2",
     "eslint-loader": "3.0.2",
@@ -74,8 +75,8 @@
     "electron": "electron --enable-transparent-visuals --disable-gpu .",
     "preelectron-pack": "npm run build",
     "electron-pack": "electron-builder -c.extraMetadata.main=build/main.js",
-    "dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && npm run electron\"",
-    "dev:win": "concurrently \"npm run start\" \"wait-on http://localhost:3000 && npm run electron\""
+    "dev": "concurrently \"BROWSER=none npm run start\" \"wait-on http://localhost:3000 && npm run build:electron && npm run electron\"",
+    "dev:win": "concurrently \"npm run start\" \"wait-on http://localhost:3000 && npm run build:electron && npm run electron\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -124,7 +125,8 @@
     "appId": "nonExistentID",
     "files": [
       "build/**/*",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "util/**/*"
     ],
     "directories": {
       "buildResources": "assets"

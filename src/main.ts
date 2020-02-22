@@ -20,7 +20,7 @@ function createWindow() {
     resizable: false,
     webPreferences: {
       nodeIntegration: true,
-      preload: join(app.getAppPath(), "src", 'preload.js')
+      preload: join(app.getAppPath(), "util", 'preload.js')
     },
     title: "cross-search",
     transparent: true,
@@ -37,7 +37,8 @@ function createWindow() {
     mainWindow.loadURL("http://localhost:3000");
     mainWindow.webContents.openDevTools();
   } else {
-    mainWindow.loadURL(`file://${join(__dirname, "../build/index.html")}`);
+    mainWindow.webContents.openDevTools();
+    mainWindow.loadURL(`file://${join(__dirname, "./build/index.html")}`);
   }
   mainWindow.on("closed", () => (mainWindow = null));
   mainWindow.focus();
