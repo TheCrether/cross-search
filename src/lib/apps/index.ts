@@ -1,5 +1,5 @@
 import { Result } from "../interfaces";
-import { existsSync, readdirSync, statSync, accessSync } from "fs"
+import { existsSync, readdirSync, statSync } from "fs"
 import { join } from "path";
 import { homedir } from "os";
 
@@ -14,11 +14,12 @@ export function search(): Promise<Result[]> {
     directories.forEach(dir => {
       dir = dir.replace("~", homedir())
       try {
-        accessSync(dir);
-        const files: string[] = readdirSync(dir);
-        const entries: Result[] = [];
-        getDesktopEntries(files, entries, dir);
-        result = [...result, ...entries];
+        if (existsSync(dir)) {
+          const files: string[] = readdirSync(dir);
+          const entries: Result[] = [];
+          getDesktopEntries(files, entries, dir);
+          result = [...result, ...entries];
+        }
       } catch (error) {
         console.error((error as Error).message);
       }

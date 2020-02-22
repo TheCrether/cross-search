@@ -1,6 +1,12 @@
+import { homedir } from 'os';
 import { Result } from '../interfaces';
-import { readFileSync } from "fs";
-export const DIRS = ["~/.local/share/applications/", "/usr/share/applications/", "/usr/local/share/applications/"];
+import { readFileSync, existsSync } from "fs";
+import { join } from 'path';
+
+const { XDG_DATA_DIRS } = window.process.env;
+const additionalDirs = [`${homedir()}/.local/share`]
+// console.log([...XDG_DATA_DIRS.split(":"), ...additionalDirs])
+export const DIRS = [...XDG_DATA_DIRS.split(":"), ...additionalDirs].map((dir) => join(dir, "applications")).filter(existsSync)
 
 export const EXTS = [".desktop"];
 
@@ -37,7 +43,15 @@ export function parseDesktopFile(path: string): Result {
     return null;
   }
 
+
+
   return app;
+}
+
+function getIcon(icon: string) {
+  if (icon.includes("")) {
+    console.log("ree");
+  }
 }
 
 export function getResult(path: string): Result {
