@@ -12,6 +12,8 @@ An cross-platform tool for searching desktop apps etc.
 
 ## About
 
+**DISCONTINUED BECAUSE NOW USING GO AND GTK**
+
 I wanted to have something like [cerebro](https://github.com/KELiON/cerebro/) and spotlight for Linux and Windows.<br>
 Inspirations are from these two applications and also some code parts may be reused from cerebro for easiness.<br>
 This project is made with Electron
