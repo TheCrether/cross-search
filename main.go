@@ -5,11 +5,12 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"time"
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 )
+
+var searchEntry *gtk.SearchEntry
 
 const appId = "com.github.gotk3.gotk3-examples.glade"
 
@@ -34,19 +35,7 @@ func main() {
 	})
 
 	// Launch the application
-	os.Exit(application.Run(os.Args))
-
-	after := time.After(10 * time.Second)
-	for {
-		select {
-		case <-after:
-			// application.Quit()
-			log.Print("ddasd")
-		default:
-			fmt.Println("    .")
-			time.Sleep(50 * time.Millisecond)
-		}
-	}
+	application.Run(os.Args)
 }
 
 func onActivate(application *gtk.Application) {
@@ -60,7 +49,9 @@ func onActivate(application *gtk.Application) {
 	// to the Builder.
 	signals := map[string]interface{}{
 		"on_main_window_destroy": onMainWindowDestroy,
+		"on_search_changed":      onChanged,
 	}
+
 	builder.ConnectSignals(signals)
 
 	// Get the object with the id of "main_window".
@@ -75,10 +66,15 @@ func onActivate(application *gtk.Application) {
 	win.Show()
 	application.AddWindow(win)
 
-	// searchObj, err := builder.GetObject("search")
-	// errorCheck(err)
-	// search, err := isSearchBar(searchObj)
-	// events
+	searchEntryObj, err := builder.GetObject("search_entry")
+	errorCheck(err)
+	searchEntry, err = isSearchEntry(searchEntryObj)
+}
+
+func onChanged() {
+	text, err := searchEntry.GetText()
+	errorCheck(err)
+	fmt.Println(text)
 }
 
 func isWindow(obj glib.IObject) (*gtk.Window, error) {
@@ -89,9 +85,9 @@ func isWindow(obj glib.IObject) (*gtk.Window, error) {
 	return nil, errors.New("not a *gtk.Window")
 }
 
-func isSearchBar(obj glib.IObject) (*gtk.SearchBar, error) {
+func isSearchEntry(obj glib.IObject) (*gtk.SearchEntry, error) {
 	// Make type assertion (as per gtk.go).
-	if search, ok := obj.(*gtk.SearchBar); ok {
+	if search, ok := obj.(*gtk.SearchEntry); ok {
 		return search, nil
 	}
 	return nil, errors.New("not a *gtk.Window")
