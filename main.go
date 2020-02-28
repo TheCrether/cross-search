@@ -8,7 +8,7 @@ import (
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 
-	"github.com/TheCrether/cross-search/desktop"
+	"cross-search/desktop"
 )
 
 var (
