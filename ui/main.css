@@ -1,3 +1,22 @@
 entry {
+  color: white;
+  transition: all 2s;
+  /* background-color: red; */
+  /* animation: anim 2s ease-in 0 infinite; */
+}
+
+entry:focus {
   color: red;
+}
+
+@keyframes anim {
+  0% {
+    background-color: red;
+  }
+  50% {
+    background-color: green;
+  }
+  100% {
+    background-color: blue;
+  }
 }

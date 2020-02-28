@@ -7,6 +7,8 @@ import (
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
+
+	"github.com/TheCrether/cross-search/desktop"
 )
 
 var (
@@ -18,6 +20,8 @@ var (
 const appID = "at.thecrether.cross-search"
 
 func main() {
+	desktop.Test()
+
 	// Create a new application.
 	application, err := gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	errorCheck(err)
