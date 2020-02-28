@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"log"
 	"os"
 
@@ -10,13 +9,17 @@ import (
 	"github.com/gotk3/gotk3/gtk"
 )
 
-var searchEntry *gtk.SearchEntry
+var (
+	gApplication  *gtk.Application
+	gEntry        *gtk.Entry
+	gStyleContext *gtk.StyleContext
+)
 
-const appId = "com.github.gotk3.gotk3-examples.glade"
+const appID = "at.thecrether.cross-search"
 
 func main() {
 	// Create a new application.
-	application, err := gtk.ApplicationNew(appId, glib.APPLICATION_FLAGS_NONE)
+	application, err := gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	errorCheck(err)
 
 	// Connect function to application startup event, this is not required.
@@ -64,17 +67,28 @@ func onActivate(application *gtk.Application) {
 
 	// Show the Window and all of its components.
 	win.Show()
+
+	screen := win.GetScreen()
+
+	provider, err := gtk.CssProviderNew()
+	errorCheck(err)
+
+	provider.LoadFromPath("./ui/main.css")
+
+	gtk.AddProviderForScreen(screen, provider, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
+
 	application.AddWindow(win)
 
-	searchEntryObj, err := builder.GetObject("search_entry")
+	searchEntryObj, err := builder.GetObject("search")
 	errorCheck(err)
-	searchEntry, err = isSearchEntry(searchEntryObj)
+	gEntry, err = isEntry(searchEntryObj)
+	errorCheck(err)
 }
 
 func onChanged() {
-	text, err := searchEntry.GetText()
+	text, err := gEntry.GetText()
 	errorCheck(err)
-	fmt.Println(text)
+	log.Println(text)
 }
 
 func isWindow(obj glib.IObject) (*gtk.Window, error) {
@@ -85,12 +99,12 @@ func isWindow(obj glib.IObject) (*gtk.Window, error) {
 	return nil, errors.New("not a *gtk.Window")
 }
 
-func isSearchEntry(obj glib.IObject) (*gtk.SearchEntry, error) {
+func isEntry(obj glib.IObject) (*gtk.Entry, error) {
 	// Make type assertion (as per gtk.go).
-	if search, ok := obj.(*gtk.SearchEntry); ok {
+	if search, ok := obj.(*gtk.Entry); ok {
 		return search, nil
 	}
-	return nil, errors.New("not a *gtk.Window")
+	return nil, errors.New("not a *gtk.Entry")
 }
 
 func errorCheck(e error) {
