@@ -1,22 +1,23 @@
+window {
+  /*background-color: grey;*/
+}
+
 entry {
   color: white;
-  transition: all 2s;
-  /* background-color: red; */
-  /* animation: anim 2s ease-in 0 infinite; */
+  background-color: inherit;
+  border-color: rgba(0,0,0,0);
+  outline: none;
+  /*outline-width: 0px;*/
+  font-size: 22px;
+  /*box-sizing: border-box;*/
+  padding: 0 10px;
 }
 
 entry:focus {
-  color: red;
+  border-color: rgba(0,0,0,0);
+  box-shadow: none;
 }
 
-@keyframes anim {
-  0% {
-    background-color: red;
-  }
-  50% {
-    background-color: green;
-  }
-  100% {
-    background-color: blue;
-  }
+.selected {
+  border: none;
 }
