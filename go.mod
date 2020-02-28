@@ -1,7 +1,5 @@
 module github.com/TheCrether/cross-search
 
-// module cross-search
-
 go 1.13
 
 require (
