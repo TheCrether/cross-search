@@ -90,11 +90,12 @@
                 <property name="halign">start</property>
                 <property name="shadow_type">none</property>
                 <child>
-                  <object class="GtkListBox" id="list">
-                    <property name="width_request">496</property>
+                  <object class="GtkTreeView">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
+                    <property name="can_focus">True</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection"/>
+                    </child>
                   </object>
                 </child>
               </object>

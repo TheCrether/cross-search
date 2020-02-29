@@ -1,29 +1,34 @@
 package main
 
 import (
-	"errors"
+	"github.com/TheCrether/cross-search/desktop"
+	"github.com/gotk3/gotk3/gdk"
 	"log"
 	"os"
+	"regexp"
+	"unsafe"
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
-	"github.com/TheCrether/cross-search/desktop"
 )
 
 var (
-	gApplication  *gtk.Application
-	gEntry        *gtk.Entry
-	gStyleContext *gtk.StyleContext
+	gApplication *gtk.Application
+	gEntry       *gtk.Entry
+	gList        *gtk.ListBox
+	gBuilder     *gtk.Builder
+	gWin         *gtk.Window
+	iconRegex, _ = regexp.Compile(".*.(svg|png|xpm|gif|ico)$")
 )
 
 const appID = "at.thecrether.cross-search"
 
 func main() {
-	desktop.Test()
 
 	// Create a new application.
 	application, err := gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	errorCheck(err)
+	gApplication = application
 
 	// Connect function to application startup event, this is not required.
 	application.Connect("startup", func() {
@@ -50,12 +55,14 @@ func onActivate(application *gtk.Application) {
 	// Get the GtkBuilder UI definition in the glade file.
 	builder, err := gtk.BuilderNewFromFile("ui/main.glade")
 	errorCheck(err)
+	gBuilder = builder
 
 	// Map the handlers to callback functions, and connect the signals
 	// to the Builder.
 	signals := map[string]interface{}{
 		"on_main_window_destroy": onMainWindowDestroy,
 		"on_search_changed":      onChanged,
+		"list_item_clicked":      onListItemClick,
 	}
 
 	builder.ConnectSignals(signals)
@@ -70,6 +77,7 @@ func onActivate(application *gtk.Application) {
 
 	// Show the Window and all of its components.
 	win.Show()
+	gWin = win
 
 	screen := win.GetScreen()
 
@@ -82,39 +90,71 @@ func onActivate(application *gtk.Application) {
 
 	application.AddWindow(win)
 
-	searchEntryObj, err := builder.GetObject("search")
+	searchObj, err := builder.GetObject("search")
 	errorCheck(err)
-	gEntry, err = isEntry(searchEntryObj)
+	gEntry, err = isEntry(searchObj)
 	errorCheck(err)
-}
 
-func onChanged() {
-	text, err := gEntry.GetText()
+	listObj, err := builder.GetObject("list")
 	errorCheck(err)
-	log.Println(text)
+	gList, err = isListBox(listObj)
+	errorCheck(err)
+
+
+	results := desktop.GetResults()
+
+	for _, result := range results {
+		gList.Add(makeListItem(result))
+	}
+
+	win.ShowAll()
+
+	gList.SetSizeRequest(496, gList.GetAllocatedHeight())
 }
 
-func isWindow(obj glib.IObject) (*gtk.Window, error) {
-	// Make type assertion (as per gtk.go).
-	if win, ok := obj.(*gtk.Window); ok {
-		return win, nil
-	}
-	return nil, errors.New("not a *gtk.Window")
-}
+func makeListItem(result desktop.Result) *gtk.ListBoxRow {
+	builder, err := gtk.BuilderNewFromFile("ui/main.glade")
+	errorCheck(err)
 
-func isEntry(obj glib.IObject) (*gtk.Entry, error) {
-	// Make type assertion (as per gtk.go).
-	if search, ok := obj.(*gtk.Entry); ok {
-		return search, nil
-	}
-	return nil, errors.New("not a *gtk.Entry")
-}
+	row, err := gtk.ListBoxRowNew()
+	errorCheck(err)
+	row.SetSizeRequest(496, 48)
 
-func errorCheck(e error) {
-	if e != nil {
-		// panic for any errors.
-		log.Panic(e)
-	}
+	boxObj, err := builder.GetObject("list_box")
+	errorCheck(err)
+	box, err := isBox(boxObj)
+	errorCheck(err)
+
+	// get the types of a Label and of a Image
+	label, err := gtk.LabelNew("s")
+	errorCheck(err)
+	labelType := label.TypeFromInstance()
+	img, err := gtk.ImageNew()
+	errorCheck(err)
+	imgType := img.TypeFromInstance()
+
+	// get all children and move through each
+	box.GetChildren().Foreach(func(item interface{}) {
+		//check if it is a label or a image
+		if item.(*gtk.Widget).IsA(labelType) {
+			label := (*gtk.Label)(unsafe.Pointer(item.(*gtk.Widget)))
+			label.SetText(result.Name)
+		} else if item.(*gtk.Widget).IsA(imgType) {
+			image := (*gtk.Image)(unsafe.Pointer(item.(*gtk.Widget)))
+
+			if iconRegex.Match([]byte(result.Icon)) {
+				//image.SetFromFile(result.Icon)
+				file, _ := gdk.PixbufNewFromFileAtScale(result.Icon, 48, 48, true)
+				image.SetFromPixbuf(file)
+			} else {
+				image.SetFromIconName(result.Icon, gtk.ICON_SIZE_SMALL_TOOLBAR)
+			}
+		}
+	})
+
+	row.Add(box)
+
+	return row
 }
 
 // onMainWindowDestory is the callback that is linked to the

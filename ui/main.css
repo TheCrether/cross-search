@@ -7,9 +7,7 @@ entry {
   background-color: inherit;
   border-color: rgba(0,0,0,0);
   outline: none;
-  /*outline-width: 0px;*/
   font-size: 22px;
-  /*box-sizing: border-box;*/
   padding: 0 10px;
 }
 
