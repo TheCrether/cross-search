@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strings"
 	"unsafe"
 
 	"github.com/gotk3/gotk3/glib"
@@ -118,7 +119,14 @@ func makeListItem(result desktop.Result) *gtk.ListBoxRow {
 
 	row, err := gtk.ListBoxRowNew()
 	errorCheck(err)
+	alloc := gtk.Allocation{}
+	alloc.SetWidth(480)
+	alloc.SetHeight(50)
+	row.Connect("show", func() {
+		row.SetAllocation(&alloc)
+	})
 	row.SetSizeRequest(496, 48)
+	//row.SetAllocation(&alloc)
 
 	boxObj, err := builder.GetObject("list_box")
 	errorCheck(err)
@@ -142,13 +150,18 @@ func makeListItem(result desktop.Result) *gtk.ListBoxRow {
 		} else if item.(*gtk.Widget).IsA(imgType) {
 			image := (*gtk.Image)(unsafe.Pointer(item.(*gtk.Widget)))
 
+			if strings.Contains(result.Icon, "import") {
+				log.Println(result.Icon)
+			}
+
 			if iconRegex.Match([]byte(result.Icon)) {
 				//image.SetFromFile(result.Icon)
-				file, _ := gdk.PixbufNewFromFileAtScale(result.Icon, 48, 48, true)
+				file, _ := gdk.PixbufNewFromFileAtSize(result.Icon, 36, 36)
 				image.SetFromPixbuf(file)
 			} else {
 				image.SetFromIconName(result.Icon, gtk.ICON_SIZE_SMALL_TOOLBAR)
 			}
+			image.SetSizeRequest(48,48)
 		}
 	})
 
