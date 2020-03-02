@@ -18,7 +18,17 @@ type Options struct {
 type Result struct {
 	Name string
 	Icon string
-	Exec interface{}
+	Exec string
+	ExecFunc func()
+}
+
+func ContainsResult(array *[]Result, result *Result) bool {
+	for _, r := range *array {
+		if result.Name == r.Name && result.Icon == r.Icon {
+			return true
+		}
+	}
+	return false
 }
 
 func GetResults() []Result {
@@ -33,7 +43,11 @@ func getApplications() []Result {
 	return results
 }
 
-var dirsVisited []string
+var (
+	dirsVisited  []string
+	alreadyAdded []string
+	cnt          = make(map[string]int)
+)
 
 func visit(results *[]Result) filepath.WalkFunc {
 	return func(path string, info os.FileInfo, err error) error {
@@ -49,6 +63,14 @@ func visit(results *[]Result) filepath.WalkFunc {
 			if err != nil {
 				return nil
 			}
+			if utils.Contains(alreadyAdded, result.Name) {
+				if ContainsResult(results, &result) {
+					return nil
+				}
+				cnt[result.Name]++
+				result.Name+=" (" + string(cnt[result.Name]) + ")"
+			}
+			alreadyAdded = append(alreadyAdded, result.Name)
 			*results = append(*results, result)
 		}
 		return nil

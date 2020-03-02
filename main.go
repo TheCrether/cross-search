@@ -1,17 +1,14 @@
 package main
 
 import (
+	"github.com/TheCrether/cross-search/desktop"
+	"github.com/gotk3/gotk3/gdk"
+	"github.com/gotk3/gotk3/glib"
+	"github.com/gotk3/gotk3/gtk"
 	"log"
 	"os"
 	"regexp"
-	"strings"
-	"unsafe"
-
-	"github.com/TheCrether/cross-search/desktop"
-	"github.com/gotk3/gotk3/gdk"
-
-	"github.com/gotk3/gotk3/glib"
-	"github.com/gotk3/gotk3/gtk"
+	"strconv"
 )
 
 var (
@@ -21,12 +18,12 @@ var (
 	gBuilder     *gtk.Builder
 	gWin         *gtk.Window
 	iconRegex, _ = regexp.Compile(".*.(svg|png|xpm|gif|ico)$")
+	results      []desktop.Result
 )
 
 const appID = "at.thecrether.cross-search"
 
 func main() {
-
 	// Create a new application.
 	application, err := gtk.ApplicationNew(appID, glib.APPLICATION_FLAGS_NONE)
 	errorCheck(err)
@@ -54,6 +51,8 @@ func main() {
 func onActivate(application *gtk.Application) {
 	log.Println("application activate")
 
+	results = desktop.GetResults()
+
 	// Get the GtkBuilder UI definition in the glade file.
 	builder, err := gtk.BuilderNewFromFile("ui/main.glade")
 	errorCheck(err)
@@ -64,7 +63,7 @@ func onActivate(application *gtk.Application) {
 	signals := map[string]interface{}{
 		"on_main_window_destroy": onMainWindowDestroy,
 		"on_search_changed":      onChanged,
-		"list_item_clicked":      onListItemClick,
+		"list_item_activated":    onListItemActivated,
 	}
 
 	builder.ConnectSignals(signals)
@@ -102,19 +101,18 @@ func onActivate(application *gtk.Application) {
 	gList, err = isListBox(listObj)
 	errorCheck(err)
 
-	results := desktop.GetResults()
-
-	for _, result := range results {
-		gList.Add(makeListItem(result))
-	}
 
 	win.ShowAll()
 
-	// gList.SetSizeRequest(496, gList.GetAllocatedHeight())
+	for i := range results {
+		gList.Add(createRow(i))
+	}
 }
 
-func makeListItem(result desktop.Result) *gtk.ListBoxRow {
-	builder, err := gtk.BuilderNewFromFile("ui/main.glade")
+// creates a Row from a desktop.Result object
+func createRow(index int) *gtk.ListBoxRow {
+	result := results[index]
+	builder, err := gtk.BuilderNewFromFile("ui/row.xml")
 	errorCheck(err)
 
 	row, err := gtk.ListBoxRowNew()
@@ -125,46 +123,30 @@ func makeListItem(result desktop.Result) *gtk.ListBoxRow {
 	box, err := isBox(boxObj)
 	errorCheck(err)
 
-	// get the types of a Label and of a Image
-	label, err := gtk.LabelNew("s")
+	nameObj, err := builder.GetObject("name")
 	errorCheck(err)
-	labelType := label.TypeFromInstance()
-	img, err := gtk.ImageNew()
+	name, err := isLabel(nameObj)
 	errorCheck(err)
-	imgType := img.TypeFromInstance()
+	name.SetText(result.Name)
 
-	// get all children and move through each
-	box.GetChildren().Foreach(func(item interface{}) {
-		//check if it is a label or a image
-		if item.(*gtk.Widget).IsA(labelType) {
-			label := (*gtk.Label)(unsafe.Pointer(item.(*gtk.Widget)))
-			label.SetText(result.Name)
-		} else if item.(*gtk.Widget).IsA(imgType) {
-			image := (*gtk.Image)(unsafe.Pointer(item.(*gtk.Widget)))
+	iconObj, err := builder.GetObject("icon")
+	errorCheck(err)
+	icon, err := isImage(iconObj)
+	errorCheck(err)
+	if iconRegex.Match([]byte(result.Icon)) {
+		file, _ := gdk.PixbufNewFromFileAtSize(result.Icon, 32, 32)
+		icon.SetFromPixbuf(file)
+	} else {
+		icon.SetFromIconName(result.Icon, gtk.ICON_SIZE_DND)
+	}
+	icon.SetPixelSize(32)
+	icon.SetSizeRequest(48, 48)
 
-			if strings.Contains(result.Icon, "import") {
-				log.Println(result.Icon)
-			}
-
-			if iconRegex.Match([]byte(result.Icon)) {
-				//image.SetFromFile(result.Icon)
-				file, _ := gdk.PixbufNewFromFileAtSize(result.Icon, 36, 36)
-				image.SetFromPixbuf(file)
-			} else {
-				image.SetFromIconName(result.Icon, gtk.ICON_SIZE_SMALL_TOOLBAR)
-			}
-			image.SetSizeRequest(48, 48)
-		}
-	})
 
 	row.Add(box)
+	propName := result.Name+"\\"+strconv.FormatInt(int64(index), 10)
+	err = row.SetProperty("name", propName)
+	errorCheck(err)
 
 	return row
-}
-
-// onMainWindowDestory is the callback that is linked to the
-// on_main_window_destroy handler. It is not required to map this,
-// and is here to simply demo how to hook-up custom callbacks.
-func onMainWindowDestroy() {
-	log.Println("onMainWindowDestroy")
 }

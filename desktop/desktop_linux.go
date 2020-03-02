@@ -6,6 +6,7 @@ import (
 	"github.com/mitchellh/mapstructure"
 	"log"
 	"os"
+	"os/exec"
 	"path"
 	"regexp"
 	"strings"
@@ -55,7 +56,8 @@ func parse(input string) (Result, error) {
 			return Result{
 				Name: "",
 				Icon: "",
-				Exec: nil,
+				Exec: "",
+				ExecFunc: func() {},
 			}, errors.New("wont be displayed")
 		}
 	}
@@ -82,8 +84,16 @@ func parse(input string) (Result, error) {
 		return Result{
 			Name: "",
 			Icon: "",
-			Exec: nil,
+			Exec: "",
+			ExecFunc: func() {},
 		}, errors.New("wont be displayed")
+	}
+
+	result.ExecFunc = func () {
+		log.Println("he")
+		split := strings.Split(result.Exec, " ")
+		end := len(split)
+		_ = exec.Command(split[0], split[1:end]...).Run()
 	}
 
 	return result, nil

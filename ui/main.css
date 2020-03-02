@@ -5,8 +5,6 @@
 
 window {
   border-radius: 5px;
-  /*overflow: hidden;*/
-  background: none;
 }
 
 entry {
@@ -28,7 +26,7 @@ entry:focus {
 }
 
 list {
-  outline-width: 0px;
+  outline: none;
   border-image-width: 0px;
   padding: 0;
 }
@@ -36,5 +34,4 @@ list {
 row {
   outline-width: 0px;
   border-image-width: 0px;
-  /*padding: 0;*/
 }
