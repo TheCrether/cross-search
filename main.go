@@ -1,13 +1,14 @@
 package main
 
 import (
-	"github.com/TheCrether/cross-search/desktop"
-	"github.com/gotk3/gotk3/gdk"
 	"log"
 	"os"
 	"regexp"
 	"strings"
 	"unsafe"
+
+	"github.com/TheCrether/cross-search/desktop"
+	"github.com/gotk3/gotk3/gdk"
 
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
@@ -101,7 +102,6 @@ func onActivate(application *gtk.Application) {
 	gList, err = isListBox(listObj)
 	errorCheck(err)
 
-
 	results := desktop.GetResults()
 
 	for _, result := range results {
@@ -110,7 +110,7 @@ func onActivate(application *gtk.Application) {
 
 	win.ShowAll()
 
-	gList.SetSizeRequest(496, gList.GetAllocatedHeight())
+	// gList.SetSizeRequest(496, gList.GetAllocatedHeight())
 }
 
 func makeListItem(result desktop.Result) *gtk.ListBoxRow {
@@ -119,14 +119,6 @@ func makeListItem(result desktop.Result) *gtk.ListBoxRow {
 
 	row, err := gtk.ListBoxRowNew()
 	errorCheck(err)
-	alloc := gtk.Allocation{}
-	alloc.SetWidth(480)
-	alloc.SetHeight(50)
-	row.Connect("show", func() {
-		row.SetAllocation(&alloc)
-	})
-	row.SetSizeRequest(496, 48)
-	//row.SetAllocation(&alloc)
 
 	boxObj, err := builder.GetObject("list_box")
 	errorCheck(err)
@@ -161,7 +153,7 @@ func makeListItem(result desktop.Result) *gtk.ListBoxRow {
 			} else {
 				image.SetFromIconName(result.Icon, gtk.ICON_SIZE_SMALL_TOOLBAR)
 			}
-			image.SetSizeRequest(48,48)
+			image.SetSizeRequest(48, 48)
 		}
 	})
 

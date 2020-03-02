@@ -21,11 +21,6 @@ type Result struct {
 	Exec interface{}
 }
 
-func Test() {
-
-	getApplications()
-}
-
 func GetResults() []Result {
 	return getApplications()
 }

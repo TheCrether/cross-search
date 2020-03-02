@@ -1,5 +1,12 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
 window {
-  /*background-color: grey;*/
+  border-radius: 5px;
+  /*overflow: hidden;*/
+  background: none;
 }
 
 entry {
@@ -18,4 +25,16 @@ entry:focus {
 
 .selected {
   border: none;
+}
+
+list {
+  outline-width: 0px;
+  border-image-width: 0px;
+  padding: 0;
+}
+
+row {
+  outline-width: 0px;
+  border-image-width: 0px;
+  /*padding: 0;*/
 }
