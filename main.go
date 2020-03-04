@@ -19,6 +19,8 @@ var (
 	gWin         *gtk.Window
 	iconRegex, _ = regexp.Compile(".*.(svg|png|xpm|gif|ico)$")
 	results      []desktop.Result
+	resultHeight = 50
+	searchHeight = 60
 )
 
 const appID = "at.thecrether.cross-search"
@@ -101,8 +103,8 @@ func onActivate(application *gtk.Application) {
 	gList, err = isListBox(listObj)
 	errorCheck(err)
 
-
 	win.ShowAll()
+
 
 	for i := range results {
 		gList.Add(createRow(i))
@@ -140,10 +142,11 @@ func createRow(index int) *gtk.ListBoxRow {
 		icon.SetFromIconName(result.Icon, gtk.ICON_SIZE_DND)
 	}
 	icon.SetPixelSize(32)
-	icon.SetSizeRequest(48, 48)
-
+	icon.SetSizeRequest(resultHeight, resultHeight)
 
 	row.Add(box)
+	w, _ := gWin.GetDefaultSize()
+	row.SetSizeRequest(w, resultHeight)
 	propName := result.Name+"\\"+strconv.FormatInt(int64(index), 10)
 	err = row.SetProperty("name", propName)
 	errorCheck(err)
