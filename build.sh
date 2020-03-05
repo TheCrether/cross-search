@@ -1,0 +1,2 @@
+packr build
+./cross-search

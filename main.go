@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/TheCrether/cross-search/desktop"
+	"github.com/gobuffalo/packr"
 	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
@@ -21,6 +22,7 @@ var (
 	results      []desktop.Result
 	resultHeight = 50
 	searchHeight = 60
+	uiBox = packr.NewBox("./ui")
 )
 
 const appID = "at.thecrether.cross-search"
@@ -55,8 +57,14 @@ func onActivate(application *gtk.Application) {
 
 	results = desktop.GetResults()
 
+	mainGlade, err := uiBox.FindString("main.glade")
+	errorCheck(err)
+
 	// Get the GtkBuilder UI definition in the glade file.
-	builder, err := gtk.BuilderNewFromFile("ui/main.glade")
+	//builder, err := gtk.BuilderNewFromFile("ui/main.glade")
+	builder, err := gtk.BuilderNew()
+	errorCheck(err)
+	err = builder.AddFromString(mainGlade)
 	errorCheck(err)
 	gBuilder = builder
 
@@ -87,7 +95,10 @@ func onActivate(application *gtk.Application) {
 	provider, err := gtk.CssProviderNew()
 	errorCheck(err)
 
-	provider.LoadFromPath("./ui/main.css")
+	css, err := uiBox.FindString("main.css")
+	errorCheck(err)
+	err = provider.LoadFromData(css)
+	errorCheck(err)
 
 	gtk.AddProviderForScreen(screen, provider, gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
@@ -105,7 +116,6 @@ func onActivate(application *gtk.Application) {
 
 	win.ShowAll()
 
-
 	for i := range results {
 		gList.Add(createRow(i))
 	}
@@ -114,7 +124,14 @@ func onActivate(application *gtk.Application) {
 // creates a Row from a desktop.Result object
 func createRow(index int) *gtk.ListBoxRow {
 	result := results[index]
-	builder, err := gtk.BuilderNewFromFile("ui/row.xml")
+
+	rowXML, err := uiBox.FindString("row.xml")
+	errorCheck(err)
+
+	//builder, err := gtk.BuilderNewFromFile("ui/row.xml")
+	builder, err := gtk.BuilderNew()
+	errorCheck(err)
+	err = builder.AddFromString(rowXML)
 	errorCheck(err)
 
 	row, err := gtk.ListBoxRowNew()
