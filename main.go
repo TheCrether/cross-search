@@ -2,13 +2,11 @@ package main
 
 import (
 	"github.com/TheCrether/cross-search/desktop"
-	"github.com/gotk3/gotk3/gdk"
 	"github.com/gotk3/gotk3/glib"
 	"github.com/gotk3/gotk3/gtk"
 	"log"
 	"os"
 	"regexp"
-	"strconv"
 )
 
 var (
@@ -98,58 +96,97 @@ func onActivate(application *gtk.Application) {
 	gEntry, err = isEntry(searchObj)
 	errorCheck(err)
 
-	listObj, err := builder.GetObject("list")
+	gList, err := gtk.ListBoxNew()
 	errorCheck(err)
-	gList, err = isListBox(listObj)
+	_, err = gList.Connect("row-activated", onListItemActivated)
 	errorCheck(err)
+	gList.SetSelectionMode(gtk.SELECTION_SINGLE)
+
+	scrolledObj, err := builder.GetObject("scrolled")
+	errorCheck(err)
+	scrolled, err := isScrolledWindow(scrolledObj)
+	errorCheck(err)
+
+	view, err := gtk.ViewportNew(nil, nil)
+	errorCheck(err)
+
+	view.Add(gList)
+	scrolled.Add(view)
+
+	//listObj, err := builder.GetObject("list")
+	//errorCheck(err)
+	//gList, err = isListBox(listObj)
+	//errorCheck(err)
 
 	win.ShowAll()
-
 
 	for i := range results {
 		gList.Add(createRow(i))
 	}
+	errorCheck(err)
+	//win.ShowAll()
 }
 
 // creates a Row from a desktop.Result object
-func createRow(index int) *gtk.ListBoxRow {
+func createRow(index int) *gtk.Box {
 	result := results[index]
-	builder, err := gtk.BuilderNewFromFile("ui/row.xml")
+	//builder, err := gtk.BuilderNewFromFile("ui/row.glade")
+	//errorCheck(err)
+
+	//row, err := gtk.ListBoxRowNew()
+	//errorCheck(err)
+
+	box, err := gtk.BoxNew(gtk.ORIENTATION_HORIZONTAL, 2)
 	errorCheck(err)
 
-	row, err := gtk.ListBoxRowNew()
-	errorCheck(err)
+	//var icon *gtk.Image
+	//
+	//if iconRegex.Match([]byte(result.Icon)) {
+	//	file, _ := gdk.PixbufNewFromFileAtSize(result.Icon, 32, 32)
+	//	icon, err = gtk.ImageNewFromPixbuf(file)
+	//	errorCheck(err)
+	//} else {
+	//	icon, err = gtk.ImageNewFromIconName(result.Icon, gtk.ICON_SIZE_DND)
+	//	errorCheck(err)
+	//}
+	//icon.SetPixelSize(32)
+	//icon.SetSizeRequest(resultHeight, resultHeight)
+	//box.Add(icon)
 
-	boxObj, err := builder.GetObject("list_box")
+	label, err := gtk.LabelNew(result.Name)
 	errorCheck(err)
-	box, err := isBox(boxObj)
-	errorCheck(err)
+	box.Add(label)
 
-	nameObj, err := builder.GetObject("name")
-	errorCheck(err)
-	name, err := isLabel(nameObj)
-	errorCheck(err)
-	name.SetText(result.Name)
+	//boxObj, err := builder.GetObject("list_box")
+	//errorCheck(err)
+	//box, err := isBox(boxObj)
+	//errorCheck(err)
+	//
+	//nameObj, err := builder.GetObject("name")
+	//errorCheck(err)
+	//name, err := isLabel(nameObj)
+	//errorCheck(err)
+	//name.SetText(result.Name)
+	//
+	//iconObj, err := builder.GetObject("icon")
+	//errorCheck(err)
+	//icon, err := isImage(iconObj)
+	//errorCheck(err)
+	//if iconRegex.Match([]byte(result.Icon)) {
+	//	file, _ := gdk.PixbufNewFromFileAtSize(result.Icon, 32, 32)
+	//	icon.SetFromPixbuf(file)
+	//} else {
+	//	icon.SetFromIconName(result.Icon, gtk.ICON_SIZE_DND)
+	//}
+	//icon.SetPixelSize(32)
+	//icon.SetSizeRequest(resultHeight, resultHeight)
 
-	iconObj, err := builder.GetObject("icon")
-	errorCheck(err)
-	icon, err := isImage(iconObj)
-	errorCheck(err)
-	if iconRegex.Match([]byte(result.Icon)) {
-		file, _ := gdk.PixbufNewFromFileAtSize(result.Icon, 32, 32)
-		icon.SetFromPixbuf(file)
-	} else {
-		icon.SetFromIconName(result.Icon, gtk.ICON_SIZE_DND)
-	}
-	icon.SetPixelSize(32)
-	icon.SetSizeRequest(resultHeight, resultHeight)
+	//row.Add(box)
+	//w, _ := gWin.GetDefaultSize()
+	//row.SetSizeRequest(w, resultHeight)
+	//propName := result.Name + "\\" + strconv.FormatInt(int64(index), 10)
+	//err = row.SetProperty("name", propName)
+	//errorCheck(err)
 
-	row.Add(box)
-	w, _ := gWin.GetDefaultSize()
-	row.SetSizeRequest(w, resultHeight)
-	propName := result.Name+"\\"+strconv.FormatInt(int64(index), 10)
-	err = row.SetProperty("name", propName)
-	errorCheck(err)
-
-	return row
+	return box
 }
