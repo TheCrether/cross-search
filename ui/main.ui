@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.12.1 -->
+<interface>
+  <!-- interface-name main.ui -->
+  <requires lib="gtk" version="4.10"/>
+  <object class="GtkWindow" id="main_window">
+    <property name="decorated">False</property>
+    <property name="default-height">60</property>
+    <property name="default-width">500</property>
+    <property name="modal">True</property>
+    <property name="overflow">hidden</property>
+    <property name="visible">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkEntry" id="search">
+            <signal name="changed" handler="on_search_changed"/>
+          </object>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolled">
+            <property name="vexpand">True</property>
+          </object>
+        </child>
+      </object>
+    </child>
+  </object>
+</interface>

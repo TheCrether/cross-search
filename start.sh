@@ -1,4 +1,4 @@
-#/usr/bin/env bash
+#!/usr/bin/env bash
 
-go build ./main.go
-./main
+go build .
+./cross-search

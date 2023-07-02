@@ -1,52 +1,54 @@
 package main
 
 import (
-	"github.com/gotk3/gotk3/gtk"
 	"log"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/diamondburned/gotk4/pkg/gtk/v4"
 )
 
 func onChanged() {
-	text, err := gEntry.GetText()
-	errorCheck(err)
+	text := gSearch.Text()
 
 	escaped := regexp.QuoteMeta(text)
 
-	beginning, err := regexp.Compile("(?i).*" + escaped + ".*")
-	errorCheck(err)
-
 	contains, err := regexp.Compile("(?i).*" + escaped + ".*")
 	errorCheck(err)
-
-	gList.GetChildren().Foreach(func(item interface{}) {
-		widget := item.(*gtk.Widget)
-		property, err := widget.GetProperty("name")
-		errorCheck(err)
+	listModel := gList.ObserveChildren()
+	n := listModel.NItems()
+	matched := 0
+	for i := uint(0); i < n; i++ {
+		item := listModel.Item(i)
+		widget := item.Cast().(*gtk.ListBoxRow)
+		property := widget.ObjectProperty("name")
 		name := strings.Split(property.(string), "\\")[0]
-		begin := beginning.MatchString(name)
-		if begin {
-			widget.SetVisible(true)
-			widget.Show()
-			return
-		}
+		// begin := beginning.MatchString(name)
+		// if begin {
+		// 	widget.SetVisible(true)
+		// 	widget.Show()
+		// 	continue
+		// }
 
 		inner := contains.MatchString(name)
 		if inner {
 			widget.SetVisible(true)
 			widget.Show()
-			return
+			matched++
+			continue
 		}
 
 		widget.SetVisible(false)
 		widget.Hide()
-	})
+	}
+
+	log.Println("a", matched, text)
+	calculateNewSize(matched)
 }
 
 func onListItemActivated() {
-	prop, err := gList.GetSelectedRow().GetProperty("name")
-	errorCheck(err)
+	prop := gList.SelectedRow().ObjectProperty("name")
 	split := strings.Split(prop.(string), "\\")
 	index, _ := strconv.ParseInt(split[len(split)-1], 10, 32)
 	results[index].ExecFunc()

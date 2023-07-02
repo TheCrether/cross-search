@@ -3,14 +3,17 @@ package desktop
 import (
 	"errors"
 	"fmt"
-	"github.com/mitchellh/mapstructure"
 	"log"
 	"os"
 	"os/exec"
 	"path"
 	"regexp"
 	"strings"
+
+	"github.com/mitchellh/mapstructure"
 )
+
+// TODO add icon finding https://wiki.archlinux.org/title/desktop_entries#Icon_path
 
 var xdgDataDirs = func() []string {
 	for _, envVar := range os.Environ() {
@@ -54,9 +57,9 @@ func parse(input string) (Result, error) {
 		match := regex.FindString(input)
 		if match != "" {
 			return Result{
-				Name: "",
-				Icon: "",
-				Exec: "",
+				Name:     "",
+				Icon:     "",
+				Exec:     "",
 				ExecFunc: func() {},
 			}, errors.New("wont be displayed")
 		}
@@ -82,14 +85,14 @@ func parse(input string) (Result, error) {
 	if err != nil {
 		log.Println("asd")
 		return Result{
-			Name: "",
-			Icon: "",
-			Exec: "",
+			Name:     "",
+			Icon:     "",
+			Exec:     "",
 			ExecFunc: func() {},
 		}, errors.New("wont be displayed")
 	}
 
-	result.ExecFunc = func () {
+	result.ExecFunc = func() {
 		log.Println("he")
 		split := strings.Split(result.Exec, " ")
 		end := len(split)
