@@ -43,7 +43,8 @@ func onChanged() {
 		widget.Hide()
 	}
 
-	log.Println("a", matched, text)
+	// TODO add style/class change to entry when no results are found
+
 	calculateNewSize(matched)
 }
 

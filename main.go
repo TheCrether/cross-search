@@ -95,11 +95,6 @@ func onActivate(application *gtk.Application) {
 	gSearch.SetSizeRequest(-1, searchHeight-4)
 
 	gList = builder.GetObject("list").Cast().(*gtk.ListBox)
-	gList.SetSelectionMode(gtk.SelectionSingle)
-
-	scrolled := builder.GetObject("scrolled").Cast().(*gtk.ScrolledWindow)
-	view := gtk.NewViewport(nil, nil)
-
 	for i := range results {
 		row := createRow(i)
 		gList.Append(row)
@@ -108,8 +103,13 @@ func onActivate(application *gtk.Application) {
 			row.Hide()
 		}
 	}
+
+	view := gtk.NewViewport(nil, nil)
 	view.SetChild(gList)
+
+	scrolled := builder.GetObject("scrolled").Cast().(*gtk.ScrolledWindow)
 	scrolled.SetChild(view)
+
 	calculateNewSize(len(results))
 	gWin.Show()
 }
@@ -159,7 +159,6 @@ func createRow(index int) *gtk.ListBoxRow {
 func calculateNewSize(resultSize int) {
 	listHeight := resultHeight * int(math.Min(4, float64(resultSize)))
 	height := searchHeight + listHeight
-	log.Println(height)
 	gList.SetSizeRequest(500, listHeight)
 	gList.QueueResize()
 	gWin.SetDefaultSize(500, height)

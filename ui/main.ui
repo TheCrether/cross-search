@@ -15,12 +15,16 @@
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkEntry" id="search">
+            <property name="activates-default">True</property>
             <signal name="changed" handler="on_search_changed"/>
           </object>
         </child>
         <child>
           <object class="GtkScrolledWindow" id="scrolled">
             <property name="vexpand">True</property>
+            <child>
+              <object class="GtkListBox" id="list"/>
+            </child>
           </object>
         </child>
       </object>

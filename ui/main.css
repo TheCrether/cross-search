@@ -9,15 +9,15 @@ window {
 
 entry {
   color: white;
-  background-color: inherit;
-  border-color: rgba(0,0,0,0);
+  background-color: #111;
+  border-color: rgba(0, 0, 0, 0);
   outline: none;
   font-size: 22px;
   padding: 0 10px;
 }
 
 entry:focus {
-  border-color: rgba(0,0,0,0);
+  border-color: rgba(0, 0, 0, 0);
   box-shadow: none;
 }
 
