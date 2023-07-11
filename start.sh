@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 
-go build .
-./cross-search
+# start the inspector when opening app (GTK_DEBUG=interactive)
+# https://wiki.gnome.org/Projects/GTK/Inspector
+GTK_DEBUG=interactive go run .

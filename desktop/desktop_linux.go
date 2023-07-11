@@ -83,13 +83,18 @@ func parse(input string) (Result, error) {
 
 	err := mapstructure.Decode(temp, &result)
 	if err != nil {
-		log.Println("asd")
 		return Result{
 			Name:     "",
 			Icon:     "",
 			Exec:     "",
 			ExecFunc: func() {},
 		}, errors.New("wont be displayed")
+	}
+
+	icon := result.Icon
+
+	if icon != "" {
+		// TODO icon implementation
 	}
 
 	result.ExecFunc = func() {

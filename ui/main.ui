@@ -23,7 +23,11 @@
           <object class="GtkScrolledWindow" id="scrolled">
             <property name="vexpand">True</property>
             <child>
-              <object class="GtkListBox" id="list"/>
+              <object class="GtkViewport">
+                <child>
+                  <object class="GtkListBox" id="list"/>
+                </child>
+              </object>
             </child>
           </object>
         </child>

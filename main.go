@@ -21,7 +21,7 @@ var (
 	gList        *gtk.ListBox
 	gBuilder     *gtk.Builder
 	gWin         *gtk.Window
-	imgRegex, _  = regexp.Compile(".*.(svg|png|xpm|gif|ico)$")
+	imgRegex, _  = regexp.Compile(`.*\.(svg|png|xpm|gif|ico)$`)
 	results      []desktop.Result
 	resultHeight = 50
 	searchHeight = 60
@@ -104,12 +104,6 @@ func onActivate(application *gtk.Application) {
 		}
 	}
 
-	view := gtk.NewViewport(nil, nil)
-	view.SetChild(gList)
-
-	scrolled := builder.GetObject("scrolled").Cast().(*gtk.ScrolledWindow)
-	scrolled.SetChild(view)
-
 	calculateNewSize(len(results))
 	gWin.Show()
 }
@@ -123,7 +117,7 @@ func createRow(index int) *gtk.ListBoxRow {
 
 	var icon *gtk.Image
 
-	if imgRegex.Match([]byte(result.Icon)) {
+	if imgRegex.MatchString(result.Icon) {
 		pixbuf, err := gdkpixbuf.NewPixbufFromFileAtSize(result.Icon, 32, 32)
 		if err != nil {
 			icon = gtk.NewImage()

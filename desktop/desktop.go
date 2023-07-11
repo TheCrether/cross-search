@@ -16,9 +16,9 @@ type Options struct {
 }
 
 type Result struct {
-	Name string
-	Icon string
-	Exec string
+	Name     string
+	Icon     string
+	Exec     string
 	ExecFunc func()
 }
 
@@ -68,7 +68,7 @@ func visit(results *[]Result) filepath.WalkFunc {
 					return nil
 				}
 				cnt[result.Name]++
-				result.Name+=" (" + string(cnt[result.Name]) + ")"
+				result.Name += " (" + string(cnt[result.Name]) + ")"
 			}
 			alreadyAdded = append(alreadyAdded, result.Name)
 			*results = append(*results, result)

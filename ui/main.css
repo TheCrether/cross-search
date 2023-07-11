@@ -5,6 +5,7 @@
 
 window {
   border-radius: 5px;
+  background-color: #dadada;
 }
 
 entry {
@@ -29,9 +30,11 @@ list {
   outline: none;
   border-image-width: 0px;
   padding: 0;
+  background-color: #dadada;
 }
 
 row {
+  background-color: #dadada;
   outline-width: 0px;
   border-image-width: 0px;
 }
