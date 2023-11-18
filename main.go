@@ -19,7 +19,6 @@ var (
 	gApplication *gtk.Application
 	gSearch      *gtk.Entry
 	gList        *gtk.ListBox
-	gBuilder     *gtk.Builder
 	gWin         *gtk.Window
 	imgRegex, _  = regexp.Compile(`.*\.(svg|png|xpm|gif|ico)$`)
 	results      []desktop.Result
@@ -59,7 +58,6 @@ func onActivate(application *gtk.Application) {
 	results = desktop.GetResults()
 
 	builder := gtk.NewBuilder()
-	gBuilder = builder
 
 	// Map the handlers to callback functions, and connect the signals
 	// to the Builder.
@@ -126,6 +124,7 @@ func createRow(index int) *gtk.ListBoxRow {
 		}
 	} else {
 		theme := gtk.IconThemeGetForDisplay(gdk.DisplayGetDefault())
+		log.Println("theme", theme.ThemeName())
 		if theme.HasIcon(result.Icon) {
 			icon = gtk.NewImageFromIconName(result.Icon)
 		} else {
